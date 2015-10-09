@@ -113,23 +113,23 @@
           <section data-markdown>
             <script type="text/template">
               ###Allocation sur le tas
-              lorsque les besoins en mémoire dépendes de l'usage lors de l'execution du programme, il faut pouvoir demander lors de l'exécution (au runtime) au système d'allouer de nouvelles zones de mémoire.
+              lorsque les besoins en mémoire dépendent de l'usage lors de l'exécution du programme, il faut pouvoir demander lors de l'exécution (au runtime) au système d'allouer de nouvelles zones de mémoire.
 
               => l'allocation et la libération de cette mémoire est à la charge du développeur.
               En C `malloc` et `free` ; en C++ `new` et `delete`
             </script>
-          </section>
+            </section>
 
-        </section>
+            </section>
 
-        <section>
-          <section data-markdown>
+            <section>
+            <section data-markdown>
             <script type="text/template">
               #2. Execution d'un programme
             </script>
-          </section>
+            </section>
 
-          <section data-markdown>
+            <section data-markdown>
             <script type="text/template">
               ##Division de l'espace mémoire
               l'espace virtuel d'un système d'exploitation est divisé en deux parties :
@@ -138,9 +138,9 @@
 
               Les exécutables sont chargés à partir de l'adresse virtuelle 0x08048000 appelée adresse de base
             </script>
-          </section>
+            </section>
 
-          <section data-markdown>
+            <section data-markdown>
             <script type="text/template">
               ###Organisation de l'espace utilisateur d'un processus:
               <img src="img/bof_user_space_organisation.png" alt="">
@@ -149,9 +149,9 @@
               - .bss qui contient les données globales non initialisées.
               - .stack qui est la pile du programme.
             </script>
-          </section>
+            </section>
 
-          <section data-markdown>
+            <section data-markdown>
             <script type="text/template">
               exemples:
               ```c
@@ -159,11 +159,11 @@
               char b[] = "b";     // .data
 
               int main() {
-                char c;     // .stack
-                static char d;      // .bss
-                static char e[] = "e"; // .data
+              char c;     // .stack
+              static char d;      // .bss
+              static char e[] = "e"; // .data
 
-                return 0;
+              return 0;
               }
               ```
               - .text qui contient le code du programme.
@@ -171,9 +171,9 @@
               - .bss qui contient les données globales non initialisées.
               - .stack qui est la pile du programme.
             </script>
-          </section>
+            </section>
 
-          <section data-markdown>
+            <section data-markdown>
             <script type="text/template">
               ##ASM x86
               Politique de construction de la pile: construite de bas en haut (des adresse les plus grandes vers les plus petites).
@@ -182,23 +182,23 @@
               - `%ebp` (base pointer) : pointeur de base. Son rôle est de placer un repère permettant d'accéder facilement aux arguments de la fonction et/ou aux variables locales.
               - `%esp` (stack pointer) : pointeur vers le prochain emplacement libre de la pile.
             </script>
-          </section>
+            </section>
 
-          <section data-markdown>
+            <section data-markdown>
             <script type="text/template">
               ###Cadre d'une fonction
               Le cadre de fonction est un ensemble d'éléments placés sur la pile appartenant à une fonction. Cet ensemble est composé des arguments de la fonction, de certaines informations relatives à la fonction appelante (sauvegarde des registres `%eip` et `%ebp`), et enfin, des variables locales.
             </script>
-          </section>
+            </section>
 
-          <section data-markdown>
+            <section data-markdown>
             <script type="text/template">
-            ###Cadre d'une fonction
-            <img src="img/bof_cadre_fonction.png" alt="">
+              ###Cadre d'une fonction
+              <img src="img/bof_cadre_fonction.png" alt="">
             </script>
-          </section>
+            </section>
 
-          <section data-markdown>
+            <section data-markdown>
             <script type="text/template">
               ##Appeler une fonction
               ```
@@ -215,9 +215,9 @@
               ```
               NB: `call` sauvegarde eip (pointeur vers la prochaine instruction à exécuter) sur la pile puis jump à l'adresse de la fonction appelée
             </script>
-          </section>
+            </section>
 
-          <section data-markdown>
+            <section data-markdown>
             <script type="text/template">
               ###Fonction appelée
               Une fonction est composée d'un **prologue** et d'un **épilogue**.
@@ -225,15 +225,15 @@
               ####exemple
               ```
               int foo(int a, int b) {
-                int c = a;
-                int d = b;
-                return c;
+              int c = a;
+              int d = b;
+              return c;
               }
               ```
             </script>
-          </section>
+            </section>
 
-          <section data-markdown>
+            <section data-markdown>
             <script type="text/template">
               ###prologue:
               Permet de mettre en place son cadre sur la pile en sauvegardant le pointeur de base de la fonction appelante, en initialisant son propre pointeur de base, en allouant assez d'espace sur la pile pour ses variables locales et, éventuellement, en sauvgardant les registres qu'elle va utiliser dans le but de sauvegarder les données de la fonction appelante
@@ -244,9 +244,9 @@
               push   %eax       ; Sauvegarde du registre de retour
               ```
             </script>
-          </section>
+            </section>
 
-          <section data-markdown>
+            <section data-markdown>
             <script type="text/template">
               ###épilogue
               Permet à la fonction de préparer le retour à la fonction appelante en restaurant les registres sauvés, en désallouant les variables locales, en restaurant le pointeur de base de la procédure appelante et en chargeant dans le registre %eip l'adresse de l'instruction de la fonction appelante à exécuter :
@@ -263,38 +263,38 @@
               pop    %eip      ; ret
               ```
             </script>
-          </section>
+            </section>
 
-        </section>
+            </section>
 
-        <section>
-          <section data-markdown>
+            <section>
+            <section data-markdown>
             <script type="text/template">
               #3. Buffer Overflow
               ##BoF
               ###Dépassement/Débordement de tampon
             </script>
-          </section>
+            </section>
 
-          <section data-markdown>
+            <section data-markdown>
             <script type="text/template">
               ###Bug inital:
               Un logiciel écrit dans un buffer au dela de sa taille limite et fini par écrire à l'extérieur de l'espace alloué au tampon.
               - -> Ecrasant les informations nécéssaires au processus.
               - -> Segfault
             </script>
-          </section>
+            </section>
 
-          <section data-markdown>
+            <section data-markdown>
             <script type="text/template">
               ###Exploitation du bug:
               Il est bassiquement possible d'exploiter ce bug (provenant d'une erreur de programmation) pour faire exécuter au processus des instructions arbitraire.
 
               En C ce bug est typiquement provoqué par l'utilisation de `strcpy` (copie de chaine de caractère) sur une entré utilisateur sans vérification du nombre de caractère à traiter.
             </script>
-          </section>
+            </section>
 
-          <section data-markdown>
+            <section data-markdown>
             <script type="text/template">
               ###Exemple
               ```
@@ -302,21 +302,21 @@
               #include <string.h>
 
               void foo(char* string) {
-                char buffer[256];
-                strcpy(buffer, string);
+              char buffer[256];
+              strcpy(buffer, string);
               }
 
               int main(int argc, char** argv) {
-                if (argc > 1)
-                  foo(argv[1]);
+              if (argc > 1)
+              foo(argv[1]);
 
-                return 0;
+              return 0;
               }
               ```
             </script>
-          </section>
+            </section>
 
-          <section data-markdown>
+            <section data-markdown>
             <script type="text/template">
               Le prologue de la fonction foo en ASM
               ```
@@ -329,31 +329,31 @@
 
               Extrapolation du cadre
             </script>
-          </section>
+            </section>
 
-          <section data-markdown>
+            <section data-markdown>
             <script type="text/template">
               ###Objectif de l'attaque
               Ecraser `%eip` pour modifier l'adresse de retour de la fonction.
             </script>
-          </section>
+            </section>
 
-          <section data-markdown>
+            <section data-markdown>
             <script type="text/template">
 
             </script>
-          </section>
+            </section>
 
-          <section data-markdown>
+            <section data-markdown>
             <script type="text/template">
 
             </script>
-          </section>
-        </section>
+            </section>
+            </section>
 
 
-        <section>
-          <section data-markdown>
+            <section>
+            <section data-markdown>
             <script type="text/template">
               ##Sources :
               <br>
@@ -368,30 +368,30 @@
               <br>
               http://gits.hydraze.org/
             </script>
-          </section>
-        </section>
+            </section>
+            </section>
 
-      </div>
-    </div>
+          </div>
+        </div>
 
-    <script src="lib/js/head.min.js"></script>
-    <script src="js/reveal.js"></script>
+        <script src="lib/js/head.min.js"></script>
+        <script src="js/reveal.js"></script>
 
-    <script>
+        <script>
 
-      // Full list of configuration options available at:
-      // https://github.com/hakimel/reveal.js#configuration
-      Reveal.initialize({
-        controls: true,
-        progress: true,
-        history: true,
-        center: true,
-        slideNumber: true,
+          // Full list of configuration options available at:
+          // https://github.com/hakimel/reveal.js#configuration
+          Reveal.initialize({
+            controls: true,
+            progress: true,
+            history: true,
+            center: true,
+            slideNumber: true,
 
-        transition: 'slide', // none/fade/slide/convex/concave/zoom
+            transition: 'slide', // none/fade/slide/convex/concave/zoom
 
-        // Optional reveal.js plugins
-        dependencies: [
+            // Optional reveal.js plugins
+            dependencies: [
         { src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
         { src: 'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
         { src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
